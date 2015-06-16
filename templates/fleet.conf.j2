@@ -1,0 +1,15 @@
+{% set proto = "https" if etcd_ca_host else "http" %}
+{% set my_ip = hostvars[inventory_hostname]['ansible_all_ipv4_addresses'][0] -%}
+{% set all_etcd = [] -%}
+{% for host in groups[etcd_group] -%}
+  {% set other_ip = hostvars[host]['ansible_all_ipv4_addresses'][0] -%}
+  {% set _ = all_etcd.append('"%s://%s:2379"' % (proto, other_ip)) -%}
+{% endfor -%}
+etcd_servers=[{{all_etcd|join(', ')}}]
+{% if etcd_ca_host %}
+etcd_cafile={{etcd_certs_root}}/ca.crt
+etcd_keyfile={{etcd_certs_root}}/{{inventory_hostname}}.key.insecure
+etcd_certfile={{etcd_certs_root}}/{{inventory_hostname}}.crt
+{% endif %}
+public_ip="{{my_ip}}"
+metadata="{{fleet_metadata}}"

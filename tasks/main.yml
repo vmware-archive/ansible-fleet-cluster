@@ -1,0 +1,28 @@
+---
+# tasks file for ansible-fleet-cluster
+- name: Create fleet config directory
+  file: path=/etc/fleet state=directory mode=0755
+  sudo: yes
+  sudo_user: root
+
+- name: Push ca.crt
+  sudo: yes
+  sudo_user: root
+  copy: src={{local_certs}}/{{etcd_ca_host}}/{{etcd_ca_depot}}/ca.crt dest={{etcd_certs_root}}/
+  when: etcd_ca_host and etcd_ca_depot
+
+- name: Uncompress certificates
+  sudo: yes
+  sudo_user: root
+  unarchive: src={{local_certs}}/{{etcd_ca_host}}/{{etcd_ca_depot}}/{{inventory_hostname}}.tar dest={{etcd_certs_root}}
+  when: etcd_ca_host and etcd_ca_depot
+
+- name: Set fleet conf
+  sudo: yes
+  sudo_user: root
+  template: src=fleet.conf.j2 dest=/etc/fleet/fleet.conf
+
+- name: Start fleet nodes
+  service: name=fleet.service state=started
+  sudo: yes
+  sudo_user: root

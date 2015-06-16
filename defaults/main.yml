@@ -1,0 +1,8 @@
+---
+# defaults file for ansible-fleet-cluster
+etcd_ca_host: ""
+etcd_ca_depot: ""
+fleet_metadata: ""
+
+etcd_certs_root: "/etc/ssl/etcd"
+local_certs: "certs"
