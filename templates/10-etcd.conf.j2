@@ -1,0 +1,11 @@
+{% import "macros.j2" as _etcd with context %}
+[Service]
+{% if etcd_ca_host %}
+# Client auth certs
+Environment=FLEET_ETCD_CAFILE={{_etcd.ca_file()}}
+Environment=FLEET_ETCD_CERTFILE={{_etcd.cert_file()}}
+Environment=FLEET_ETCD_KEYFILE={{_etcd.key_file()}}
+{% endif %}
+Environment=FLEET_ETCD_SERVERS={{_etcd.peers()}}
+Environment=FLEET_PUBLIC_IP={{ansible_default_ipv4.address}}
+Environment=FLEET_METADATA={{fleet_metadata}}

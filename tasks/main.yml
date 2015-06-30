@@ -1,7 +1,7 @@
 ---
 # tasks file for ansible-fleet-cluster
-- name: Create fleet config directory
-  file: path=/etc/fleet state=directory mode=0755
+- name: Create systemd drop-in directory
+  file: path={{fleet_dropin_dir}} state=directory mode=0755
   sudo: yes
   sudo_user: root
 
@@ -20,9 +20,49 @@
 - name: Set fleet conf
   sudo: yes
   sudo_user: root
-  template: src=fleet.conf.j2 dest=/etc/fleet/fleet.conf
+  template: src=10-etcd.conf.j2 dest={{fleet_dropin_dir}}/10-etcd.conf
+  register: fleet_etcd_dropin
 
-- name: Start fleet nodes
-  service: name=fleet.service state=started
+- name: Add fleet-install unit
   sudo: yes
   sudo_user: root
+  copy: src=fleet-install.service dest=/etc/systemd/system/fleet-install.service
+  register: fleet_install
+
+- name: Reload systemd
+  sudo: yes
+  sudo_user: root
+  shell: systemctl daemon-reload
+  when: fleet_etcd_dropin.changed or fleet_install.changed
+
+- name: Stop fleet nodes
+  service: name=fleet.service state=stopped
+  sudo: yes
+  sudo_user: root
+  when: fleet_etcd_dropin.changed or fleet_install.changed
+
+- name: Enable fleet nodes
+  service: name=fleet-install.service enabled=yes
+  sudo: yes
+  sudo_user: root
+  when: fleet_install.changed
+
+- name: Start fleet nodes
+  service: name=fleet-install.service state=started
+  sudo: yes
+  sudo_user: root
+
+- name: Create env.d dir
+  sudo: yes
+  sudo_user: root
+  file: path=/etc/env.d state=directory mode=0755
+
+- name: Create etcdctl env file
+  sudo: yes
+  sudo_user: root
+  template: src=etcdctl.env.j2 dest=/etc/env.d/etcdctl.env
+
+- name: Create env file
+  sudo: yes
+  sudo_user: root
+  assemble: src=/etc/env.d dest=/etc/environment mode=0644

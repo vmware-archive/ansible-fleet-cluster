@@ -3,6 +3,8 @@
 etcd_ca_host: ""
 etcd_ca_depot: ""
 fleet_metadata: ""
+fleet_service: "fleet.service"
+fleet_dropin_dir: "/etc/systemd/system/{{fleet_service}}.d"
 
 etcd_certs_root: "/etc/ssl/etcd"
 local_certs: "certs"

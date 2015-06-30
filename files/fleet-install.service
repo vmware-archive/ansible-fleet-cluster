@@ -1,0 +1,10 @@
+[Unit]
+Requires=fleet.service
+After=fleet.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/echo plop
+
+[Install]
+WantedBy=multi-user.target
