@@ -15,7 +15,7 @@
 {% set my_ip = ansible_default_ipv4.address -%}
 {% set all_etcd = [] -%}
 {% if inventory_hostname in groups[etcd_group] -%}
-  {% set _ = all_etcd.append('"http://127.0.0.1:2379"') -%}
+  {% set _ = all_etcd.append('"http://172.17.42.1:2379"') -%}
 {% else -%}
   {% for host in groups[etcd_group] -%}
     {% set other_ip = hostvars[host]['ansible_default_ipv4']['address'] -%}

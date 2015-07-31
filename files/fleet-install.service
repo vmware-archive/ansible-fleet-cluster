@@ -3,8 +3,7 @@ Requires=fleet.service
 After=fleet.service
 
 [Service]
-Type=oneshot
-ExecStart=/usr/bin/echo plop
+ExecStart=/usr/bin/sleep infinity
 
 [Install]
 WantedBy=multi-user.target
