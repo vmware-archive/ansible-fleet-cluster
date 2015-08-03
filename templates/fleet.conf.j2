@@ -1,9 +1,0 @@
-{% import "macros.j2" as _etcd with context %}
-{% if etcd_ca_host %}
-etcd_cafile={{_etcd.ca_file()}}
-etcd_keyfile={{_etcd.key_file()}}
-etcd_certfile={{_etcd.cert_file()}}
-{% endif %}
-etcd_servers=[{{_etcd.peers()}}]
-public_ip="{{ansible_default_ipv4.address}}"
-metadata="{{fleet_metadata}}"
