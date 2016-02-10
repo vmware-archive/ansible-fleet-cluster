@@ -1,0 +1,10 @@
+---
+- name: Reload systemd
+  sudo: yes
+  command: systemctl daemon-reload
+  notify:
+    - Restart fleet
+
+- name: Restart fleet
+  service: name=fleet.service state=restarted
+  sudo: yes

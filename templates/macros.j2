@@ -11,7 +11,7 @@
 {%- endmacro %}
 
 {% macro peers() -%}
-{% set proto = "https" if etcd_ca_host else "http" %}
+{% set proto = "https" if etcd_ca_setup else "http" %}
 {% set my_ip = ansible_docker0.ipv4.address | default(ansible_default_ipv4.address) -%}
 {% set all_etcd = [] -%}
 {% if inventory_hostname in groups[etcd_group] -%}
