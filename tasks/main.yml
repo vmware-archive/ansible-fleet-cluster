@@ -24,7 +24,7 @@
   sudo: yes
   shell: systemctl add-wants multi-user.target fleet.service
   register: fleet_install
-  changed_when: "'Created symlink' in fleet_install.stdout"
+  changed_when: "'Created symlink' in fleet_install.stdout + fleet_install.stderr"
   notify:
     - Reload systemd
 
