@@ -8,4 +8,4 @@ Current version: 0.1.0
 License
 -------
 
-MIT
+This code is Dual Licensed MIT or GPLv3
